@@ -1,231 +1,104 @@
-# EasyGit (3단계: 브랜치·커밋 목록)
+# EasyGit
 
-git을 처음 쓰는 사람을 위한 VS Code 확장. 큰 창 하나에서 커밋·푸시·브랜치를 버튼으로.
-튜토리얼 없이 화면만 보고 다음에 뭘 할지 알 수 있는 것이 목표다.
+**git을 처음 쓰는 사람을 위한 VS Code 확장.**
+커밋·푸시·풀·브랜치를 큰 창 하나에서 버튼으로 해요. 명령어를 외우지 않아도, 화면 맨 아래 안내줄이 지금 할 일과 그 버튼을 알려줘요.
 
-## 실행해보기
+[English below](#english)
+
+## 이런 분께
+
+- git 명령어가 무섭고, GitHub Desktop도 낯선 분
+- 팀 프로젝트에서 "브랜치 따서 PR 올려 주세요"라는 말을 처음 들은 분
+- 푸시를 했는데 GitHub에 왜 안 올라갔는지 모르겠는 분
+
+## 할 수 있는 것
+
+**시작하기**
+- 폴더를 git 저장소로 만들기, GitHub 저장소 가져오기(클론)
+- 내 프로젝트를 GitHub에 올리기 — 새 저장소를 만들거나, 미리 만들어 둔 빈 저장소에 연결
+- 윗줄 `GitHub ↗` 를 누르면 저장소 페이지가 바로 열려요
+
+**매일 쓰는 것**
+- 바뀐 파일 체크 → 무엇을 바꿨는지 적고 → 커밋
+- 푸시 / 풀 버튼에 올릴 커밋·받을 커밋 개수가 늘 같이 보여요
+- 파일 하나의 변경 버리기 (새 파일은 휴지통으로 가서 다시 꺼낼 수 있어요)
+- `node_modules`, `.env` 처럼 보통 안 올리는 파일은 알려주고, 처음부터 커밋에서 빼 둬요
+
+**브랜치와 팀 작업**
+- 브랜치 만들기·옮기기. 고치던 내용은 들고 가거나 잠시 치워 둘 수 있어요 (돌아오면 [다시 꺼내기])
+- 브랜치별 커밋 목록 — 어디까지 GitHub에 올라갔는지 구분줄로 보여줘요
+- 브랜치를 다 올렸으면 [PR 만들기 ↗]로 GitHub PR 작성 화면이 바로 열려요
+- main의 최신 내용을 내 브랜치로 받아오기 (PR에 충돌이 났을 때)
+- 충돌이 나면 파일마다 "내 거 / 팀원 거"를 나란히 보여주고 골라요
+
+**실수했을 때**
+- 아직 안 올린 커밋 취소하기 / 이미 올린 커밋은 되돌리는 커밋 만들기
+- git 에러는 쉬운 말로 바꿔서 보여줘요 (원문은 [원문 보기]로)
+
+**그 밖에**
+- 한국어 / English
+- 스킨: VS Code 테마를 따라가는 기본 / 픽셀 RPG
+
+## 시작하기
+
+1. 확장을 설치해요.
+2. 왼쪽 막대의 EasyGit 아이콘 → **EasyGit 열기**. (또는 `Ctrl/⌘ + Shift + P` → "EasyGit 열기")
+3. 그다음은 화면 맨 아래 안내줄을 따라가면 돼요.
+
+GitHub에 올리거나 비공개 저장소를 가져올 때는 GitHub 로그인이 필요해요. 필요한 순간에 한 번만 물어봐요.
+
+## 안심하고 쓰셔도 돼요
+
+- GitHub 로그인은 VS Code에 들어 있는 GitHub 계정 기능을 그대로 써요. 비밀번호를 EasyGit이 받지 않아요.
+- 로그인 토큰은 github.com에 접속할 때만 git에 넘기고, 파일이나 다른 곳에 저장하지 않아요.
+- 푸시·되돌리기·변경 버리기처럼 되돌리기 어려운 일은 항상 확인창을 먼저 띄워요.
+- 머지(합치기)는 일부러 넣지 않았어요. 팀원이 검토할 수 있게 GitHub의 PR에서 하는 걸 권해요.
+
+## 설정
+
+화면 오른쪽 위 톱니바퀴에서 바꿀 수 있어요.
+
+| 설정 | 설명 |
+|---|---|
+| `easygit.language` | `auto`(VS Code 언어 따라감) / `ko` / `en` |
+| `easygit.skin` | `vscode` / `pixel` |
+| `easygit.warnOnMainBranch` | main에서 파일을 고치면 "이 브랜치 맞아요?" 물어보기 |
+| `easygit.commitPrefixes` | 커밋 메시지 앞에 붙일 말머리 (`fix: ` 같은 것) |
+
+## 피드백
+
+버그나 "여기서 뭘 해야 할지 모르겠어요" 같은 의견은 [이슈](https://github.com/KimYeonBee/easygit/issues)에 남겨 주세요.
+헷갈렸던 순간이 이 확장을 고치는 가장 좋은 재료예요.
+
+## 개발
 
 ```bash
 npm install
-npm run build        # 또는 npm run watch (고칠 때마다 자동 빌드)
+npm run build
 ```
 
-VS Code에서 이 폴더를 열고 `F5` → 새 VS Code 창(Extension Development Host)이 뜸.
-그 창에서 git 저장소 폴더를 열고,
-- 왼쪽 사이드바 EasyGit 아이콘 → "EasyGit 열기" 버튼, 또는
-- `Ctrl+Shift+P` → "EasyGit 열기"
+VS Code에서 이 폴더를 열고 `F5` → 새로 뜬 창에서 아무 git 저장소 폴더를 열면 돼요.
 
-## 지금 되는 것
-1단계
-- 에디터 탭으로 큰 창 열림. 왼쪽 그래프 자리 / 오른쪽 작업 / 아래 안내 레이아웃
-- 바뀐 파일 목록 (수정됨/새 파일/삭제됨/충돌 표시), 파일 클릭하면 열림, "차이 보기"
-- 파일 저장·생성·삭제하면 자동 갱신
-- 하단 안내 한 줄 ("커밋 안 한 변경 3개…")
-- main/master에서 파일 저장하면 "이 브랜5치 맞아요?" 알림 (세션당 1번)
+---
 
-2단계
-- 커밋: 체크한 파일만 add 하고 커밋. 성공해야 메시지 칸이 비워짐
-- 푸시: 확인창("이거 팀 저장소에 올라가요") → upstream 없으면 `-u origin <branch>`로 새로 만듦
-- 풀: `--no-rebase` 고정 (설정 없이 풀하면 git이 rebase냐 merge냐 물으며 멈춰서)
-- 창을 열 때·⟳ 누를 때 백그라운드로 fetch → "GitHub에 새 커밋 N개"가 실제로 뜸
-- 실패하면 하단 안내에 쉬운 한국어로 이유 + "원문 보기"로 git 원문 펼치기
+## English
 
-3단계
-- 브랜치 드롭다운: 내 브랜치 / GitHub에만 있는 브랜치(누르면 "가져오기") 나눠서 표시
-- 새 브랜치 만들기 (이름 검사 포함). main 경고 알림의 [새 브랜치 만들기]도 같은 곳으로 연결
-- 브랜치 이동 시 커밋 안 한 변경이 있으면 [같이 가져가기] / [잠시 치워두기(stash)] 확인창
-- 커밋 목록 (원래는 세로 줄기 그래프였는데, 갈라지는 그림이 안 나오니 목록으로 바꿈): 위쪽 [메인 브랜치] [현재 브랜치 ▾]로
-  어느 브랜치의 역사를 볼지 고름. ▾는 브랜치 옮기기 / 새 브랜치 만들기 목록.
-  - 메인 브랜치 = GitHub에 정해 둔 기본 브랜치(origin/HEAD) → main → master → 지금 브랜치
-  - 커밋 한 칸에 제목 / 누가 · 언제 · 앞 7자리. **그 브랜치에서 직접 한 커밋만** 보여줌
-  - 목록 오른쪽 위 [최신순 ↓] / [오래된순 ↑] 버튼 — 누를 때마다 뒤집힌다 (기본은 최신순).
-    "커밋 전" 칸은 늘 최신 쪽 끝, "갈라져 나옴" 칸은 늘 옛날 쪽 끝에 붙고 구분줄도 같이 뒤집힌다.
-    "커밋하면 바로 아래/위에 한 칸 쌓여요" 문구도 순서를 따라간다
-    - 메인 브랜치: 메인에서 직접 한 커밋 + 합친 커밋("'test2' 브랜치를 합쳤어요"). 합쳐 들어온 브랜치 안의 커밋은 안 보임
-    - 다른 브랜치: 갈라져 나온 뒤에 그 브랜치에서 한 커밋만. 맨 아래에 흐린 점선 칸으로 "test2에서 갈라져 나옴"(갈라진 커밋)을
-      하나 남기고, 누르면 실제로 test2로 브랜치를 옮김 (커밋 안 한 변경이 있으면 같이 가져가기/잠시 치워두기 확인창.
-      내 컴퓨터에 없는 브랜치면 GitHub에서 가져오면서 옮김)
-  - 출처 판단: 메인의 첫 부모 → 머지 제목 이름 → 커밋에 남은 브랜치 이름. 같은 커밋을 가리키는 브랜치가 여럿이면
-    내 컴퓨터 reflog에 남은 "만든 시각"이 빠른 쪽이 주인 (gitService.ts의 branchCreatedAt)
-  - **커밋이 어디까지 갔는지는 사이사이 구분줄이 말해 준다** (Commits.tsx의 Divider).
-    같은 처지의 커밋이 이어지는 동안은 한 무더기 — "커밋이 쌓인다"가 이 줄로 보인다
-    - `여기부터 아직 GitHub에 없어요 · N개` + [푸시 ↑ N] — 칸 테두리가 노란빛.
-      숫자가 붙어 있어서 **푸시 한 번에 밀린 게 같이 올라간다**는 게 버튼만 봐도 전달된다
-    - `여기부터 GitHub에만 있어요 · N개` + [풀 ↓] — 점선 칸 (GitHub에서 머지만 하고 아직 풀 안 한 것)
-    - `여기부터 GitHub에도 있어요` — 양쪽에 다 있는 커밋
-    - 구분줄의 풀·푸시 버튼은 지금 작업 중인 브랜치를 볼 때만 (다른 브랜치면 목록 위의 안내 띠가 대신함)
-  - 지금 브랜치를 볼 때 커밋 안 한 변경이 있으면 맨 위에 노란 점선 "커밋 전 · 바뀐 파일 N개" 자리.
-    충돌이 있으면 같은 자리가 빨간 "충돌 · 고를 파일 N개"
-  - 내 컴퓨터 브랜치와 GitHub의 같은 브랜치(origin/…)를 합쳐 그림
-  - VS Code 창으로 돌아오거나 EasyGit 탭을 다시 볼 때 GitHub 소식을 조용히 받아옴 (30초에 한 번까지)
-  - 커밋을 누르면 오른쪽이 그 커밋의 상세 + 바뀐 파일 목록으로 바뀜 (파일 누르면 그 커밋 전↔후 비교).
-    다시 누르거나 [← 커밋 전 파일로 돌아가기]를 누르면 커밋하는 화면으로 돌아옴
-  - 브랜치를 옮긴 뒤 커밋하면 목록이 자동으로 [현재 브랜치]로 넘어가 방금 커밋이 보이게 함
-- 바뀐 파일: [전체 선택] 체크, 파일 이름을 누르면 바로 차이 보기 (새 파일은 파일 열기). add는 커밋할 때 자동
-- 오른쪽 두 목록을 한눈에 구분: **커밋 전**(노란 점선 테두리) / **커밋 후**(초록 실선). 파일마다 `+12 −3 ■■■■□`
-  줄 수와 다섯 칸 막대, 목록 제목에 합계. 사진 같은 파일은 "파일"
-- 한글 파일 이름이 커밋 파일 목록에서 깨지던 문제 수정 (git 출력에 -z)
-- 비교 화면의 옛 버전은 EasyGit이 직접 꺼내 줌 (extension.ts의 easygit: 내용 제공자 → git show).
-  VS Code 내장 git: 주소는 그 시점에 파일이 없으면(새로 만든 파일의 "전") 화면을 못 열어서 바꿈
-- 커밋 말머리(`fix: ` 등) 드롭다운, 브랜치 이름에 번호가 있으면 `#123 넣기` 버튼
+**A VS Code extension for people using git for the first time.**
+Commit, push, pull and branch with buttons in one big window. A guide line at the bottom always tells you what to do next — with the button to do it.
 
-설명 없이 알아보게 (2026-09-19)
-- 화면이 "상태"는 잘 보여주는데 "순서"를 안 보여준다는 문제를 고친 묶음이다.
-  커밋(오른쪽 아래)과 푸시(왼쪽 위)가 실제로는 이어지는 한 동작인데 화면에서 가장 먼 두 지점에 있었다.
-- **하단 안내줄에 그 일을 바로 하는 버튼**: buildGuide가 `{ text, tone, action }`을 돌려주고,
-  문장 옆에 같은 뜻의 버튼이 붙는다 ([푸시 ↑ 3] [풀 ↓ 1] [GitHub에 올리기 ↑] [전체 선택]).
-  이러면 사용자가 외울 규칙이 "헷갈리면 맨 아래 줄만 보면 된다" 하나로 준다.
-  단, **커밋만은 버튼을 안 붙인다** — 커밋 버튼이 바로 위 커밋 칸에 있어서 같은 버튼이 위아래로 둘이 된다.
-- **윗줄을 [내 컴퓨터 | GitHub] 두 구역으로**: 버튼이 한 줄에 평평하게 있으면 전부 같은 종류로 보인다.
-  브랜치는 왼쪽(내 컴퓨터), 풀·푸시는 오른쪽(GitHub), 사이에 세로선.
-  세로선은 본문과 **같은 격자**(`minmax(280px,5fr) minmax(360px,6fr)`)를 써서 위아래가 딱 맞게 긋는다 —
-  `.zone.local`의 border-right로, `.history`와 똑같은 방식. 한쪽만 바꾸면 선이 어긋난다.
-  풀·푸시 버튼은 두 줄 — 원어는 크게, 방향은 작게(받아오기 / 올려보내기). 용어는 원어 그대로 두고 방향만 덧붙인 것.
-  ⟳·설정·계정은 맨 오른쪽 도구 자리로 뺀다.
-- **커밋 직후 그 자리에서 무엇이 남았는지**: 파일 목록 자리가 "커밋했어요 ✓ / 아직 GitHub에 안 올린 커밋이 N개 쌓였어요.
-  푸시 한 번에 같이 올라가요."로 바뀐다. 푸시는 커밋 하나가 아니라 **밀린 커밋 전부**를 한 번에 올리므로,
-  개수를 같이 보여줘서 "커밋 = 푸시 한 세트"라는 틀린 습관이 안 들게 한다. 버튼은 안 붙인다(아래 안내줄 한 곳에만).
-- **세로 줄기 그래프를 커밋 목록으로**: 한 브랜치 커밋만 보여주기로 정한 뒤로 갈라지는 그림이 화면에 안 나오는데
-  그래프 문법(좌우 뒤집기, 줄기, 점 모양)만 남아 있었다. 특히 좌우 뒤집힘은 설명을 읽어야만 알 수 있는 규칙이라 버렸다.
-  점·선이 하던 말은 구분줄과 칸 테두리 색이 대신한다.
-- **고정 브랜치**: 설정 [고정 브랜치]에서 고른 브랜치가 윗줄에 버튼으로 늘 남는다.
-  누르면 그 브랜치의 커밋 목록을 보여줄 뿐 **브랜치를 옮기지는 않는다** (옮기기는 [현재 브랜치 ▾]).
-  브랜치 이름은 저장소마다 다르니 설정 파일이 아니라 `context.workspaceState`에 담는다 —
-  `.vscode/settings.json`에 쓰면 그게 '바뀐 파일'로 잡혀서 사용자를 헷갈리게 한다.
-  워크스페이스 기억은 설정 바뀜 알림이 안 오니 저장 후 `postConfig()`를 직접 부른다.
-- **브랜치 버튼 줄은 가로 스크롤**: 고정이 늘어도 가운데 세로선을 넘지 않는다 (`.view-scroll`).
-  드롭다운(`.menu`)은 이 스크롤 칸 **밖**에 둬야 잘리지 않는다.
-- **긴 설명은 버튼 옆 ⓘ에 접어 둔다**: 커밋 상세에서 "왜 취소가 아니라 되돌리기인지" 같은 설명이
-  버튼보다 길어서, 마우스를 올리면 뜨는 말풍선으로 옮겼다 (App.tsx의 Hint + styles.css의 `.hint`).
-  CSS만으로 만든 말풍선이라(`data-tip` + `::after`) 탭으로 옮겨와도 뜬다.
-  버튼이 없는 경우(GitHub에만 있는 커밋, 맨 첫 커밋)는 설명이 곧 내용이라 그냥 한 줄로 둔다.
-  **주의**: 클래스 이름을 `.info`로 두면 하단 안내줄의 톤 클래스(`guide info`)와 충돌해 푸터가 18px 동그라미로 찌그러진다.
-- **왼쪽만 굵은 테두리(액센트 바)는 쓰지 않는다** (2026-09-19 사용자 요청: "넘 별로고 AI 같음").
-  커밋 칸·고른 칸·커밋 전/후 파일 목록·충돌 카드 전부 사방 1px로 통일하고, 구분이 필요하면 테두리 **색**만 바꾼다.
-- **기본 화면은 단순하게 (레트로는 스킨 쪽 일)**: 한 번 기본 화면을 각진 모서리 + 눌리는 입체 테두리로 바꿨다가,
-  픽셀 RPG 스킨과 크게 다르지 않고 "너무 사각사각하다"는 판단으로 되돌렸다.
-  기본은 부드러운 모서리 + 얇은 1px 선이고, 각진 모양은 픽셀 RPG 스킨만 맡는다.
-  모서리 값은 styles.css 위쪽 "모서리" 블록에 한곳에 모아 뒀다 (6 / 8 / 10 / 12px + 알약 999px).
+**Features**
+- Turn a folder into a repository, clone from GitHub, publish to a new GitHub repository or connect an empty one
+- Commit checked files, push/pull with commit counts always shown, open the repository page with `GitHub ↗`
+- Discard changes to a file (new files go to the trash), with a heads-up for files like `node_modules` or `.env`
+- Create and switch branches, stash and restore changes, see what's already on GitHub in the commit list
+- Open a pull request in one click, bring in the latest main, resolve conflicts by picking "mine" or "theirs"
+- Undo unpushed commits, revert pushed ones, and read git errors in plain words
+- Korean / English, default and pixel RPG skins
 
-시작 화면 (원래 6단계에서 앞당김)
-- 저장소가 아닌 폴더를 열면 [이 폴더를 저장소로 만들기] / [GitHub 저장소 가져오기] 두 갈래
-- 만들기: 확인창 후 `git init`, 기본 브랜치는 설정과 상관없이 main. 홈 폴더·디스크 전체는 막음
-- 가져오기: 주소 입력(GitHub 페이지 주소를 그대로 붙여도 다듬어 줌) → 저장할 곳 선택 → clone →
-  [이 창에서 열기]/[새 창에서 열기] → 열린 창에서 EasyGit이 자동으로 뜸
-- 폴더 없이 뜬 빈 창에서도 명령이 동작 (폴더 열기 / 가져오기 안내)
-- 이메일이 설정 안 된 컴퓨터면 첫 커밋 전에 이름·이메일을 한 번 물어봄.
-  안 하면 git이 `계정@컴퓨터.local` 같은 가짜 주소를 지어내서 GitHub에서 내 커밋으로 안 잡힘
-- GitHub 연결(remote)이 없으면 푸시·풀 버튼을 잠그고 이유를 보여줌
+**Getting started**: install, click the EasyGit icon in the Activity Bar → **Open EasyGit**, then follow the bottom line.
 
-GitHub 로그인
-- VS Code 내장 GitHub 로그인을 씀 (내장 git과 같은 권한 묶음이라, 이미 로그인해 뒀으면 다시 안 물음)
-- 처음엔 위쪽에 [GitHub 로그인] / [나중에 할게요] 띠. 나중에를 누르면 오른쪽 위 작은 링크로만 남음.
-  로그인하면 오른쪽 위에 계정 이름
-- 로그인은 필요할 때만 묻는다: 공개 저장소 가져오기는 그냥 되고, 비공개라서 막히거나
-  푸시·풀이 로그인 때문에 막히면 그때 "로그인이 필요해요" → 로그인 → 자동으로 다시 시도.
-  이미 로그인했는데 권한이 없거나(403), GitHub이 아닌 주소거나, 인터넷 문제면 로그인 창을 안 띄움
-- 토큰은 github.com 에 접속할 때만, 환경변수로 git에 넘긴다 (gitService.ts의 githubCredentialConfig).
-  저장소 설정 파일이나 키체인에 저장되지 않고, 다른 사이트에는 안 간다
-- 백그라운드 fetch는 로그인 창을 절대 띄우지 않음
+Sign-in uses VS Code's built-in GitHub account. Your token is only passed to git when talking to github.com and is never stored by EasyGit.
 
-GitHub에 올리기
-- GitHub 연결이 없는 저장소는 [풀][푸시] 대신 [GitHub에 올리기] 버튼 하나
-- 로그인 → 저장소 이름(폴더 이름에서 제안) → 비공개/공개 → 확인창(공개면 비밀번호·API 키 경고)
-  → GitHub에 저장소 생성 → origin 연결 → 푸시 → [GitHub에서 보기]
-- 이름이 이미 있으면 이름만 다시 받음
+## License
 
-커밋 취소 / 되돌리기 (원래 4단계에서 앞당김)
-- 그래프에서 커밋을 누르면 아래에 그 커밋으로 할 수 있는 일 하나만 보여줌
-  - 지금 브랜치의 안 올린 커밋 → [이 커밋 취소하기]: `reset --mixed 커밋^`. 브랜치는 커밋 전으로,
-    내용은 '바뀐 파일'로 돌아옴. 뒤에 쌓인 커밋이 있으면 확인창에 개수를 알림.
-    취소 후 "다른 브랜치로 옮길까요?" → 브랜치 고르면 내용을 들고 이동, 커밋 칸에 원래 메시지를 다시 채워 줌
-  - 이미 올린 커밋 → [되돌리는 커밋 만들기]: `revert` 후 제목을 "되돌림: …"으로. 막히면 반쯤 된 상태 없이 원래대로
-  - 다른 브랜치의 커밋 → "그 브랜치로 옮기기"만. 맨 첫 커밋은 취소 불가 안내
-- 실행 직전에 git에 다시 확인 (화면이 오래돼서 이미 올라간 커밋을 지우는 일을 막음)
-
-기타
-- 저장소 안의 하위 폴더를 열어도 파일 경로가 맞게 동작 (저장소 맨 위 폴더 기준으로 git을 돌림)
-
-충돌(충돌) 해결 (5단계)
-- 머지는 EasyGit에서 하지 않는다 — 팀원이 PR을 리뷰해야 하니 GitHub에서. EasyGit에서 충돌이 생기는 곳은 풀
-- 합치는 중에는 **왼쪽도 "합치는 중" 화면으로 바뀐다** (Commits.tsx의 MergeView).
-  보통 커밋 목록은 세로 한 줄이라 나란한 두 갈래를 위아래로 놓게 되고, 처음 보는 사람은 그걸
-  시간 순서로 읽는다("내 쪽 다음에 팀원 쪽을 했구나"). 합치는 중은 EasyGit에서 유일하게
-  진짜로 갈라지는 순간이라 이때만 두 쪽을 **가로로** 놓는다.
-  - 맨 위에 점선으로 "합침 커밋이 여기에 생겨요" 자리를 비워 둔다 — 마무리를 누르면 뭐가 생기는지 미리 보이게
-  - 두 쪽 색은 오른쪽 충돌 화면의 [내 거] / [팀원 거] 칸과 **똑같이** 맞춘다 (파랑 / 자주). 두 칸이 한 화면으로 읽히도록
-  - 아래에 갈라진 자리와 그 앞 공통 커밋 몇 개
-  - 두 갈래는 `MergeState`의 `head` / `incoming`(.git/MERGE_HEAD) / `base`(merge-base)로 나눈다.
-    푸시 여부로 나누면 'main 최신 내용 받아오기'에서 틀린다
-  - 오른쪽 위 [커밋 목록 보기] ↔ [← 합치는 중으로]로 원래 목록을 잠깐 볼 수 있다.
-    합치기가 시작되면 목록 기준 브랜치도 [현재 브랜치]로 맞춰 둔다
-  - 합치는 중에는 목록 구분줄의 풀·푸시 버튼을 아예 안 그린다 (그 동작이 잠겨 있으니 보여 줄 이유가 없다)
-- 풀 하다 충돌하면(.git/MERGE_HEAD) 오른쪽이 충돌 화면으로 바뀜. 파일마다 충돌한 곳의 "내 거 / 팀원 거" 내용을 나란히 보여주고
-  [내 거 쓰기] [팀원 거 쓰기] [직접 고치기 → 다 고쳤어요]. 한쪽이 지운 파일은 "(지우기)"로
-- [다 고쳤어요]는 <<<<<<< 표시가 남아 있으면 해결로 안 침. [두 쪽 전체 비교]는 :2(내 거) ↔ :3(팀원 거)
-- [직접 고치기]는 `vscode.openWith`로 **보통 편집기**를 강제한다. 그냥 `showTextDocument`로 열면 VS Code가
-  3칸짜리 '병합 편집기'를 띄울 수 있는데, 거기선 양옆 칸이 읽기 전용이라 "두 쪽 지우고 새로 쓰기"가 안 되고
-  화면 안내("<<<<<<< 부터 >>>>>>> 까지를 바꿔 주세요")와도 안 맞는다
-- [다 고쳤어요]는 **충돌 표시가 0개면 [직접 고치기]를 안 눌렀어도** 뜬다. 다른 편집기로 고쳤거나
-  화면을 다시 연 경우에도 마무리할 길이 있어야 하기 때문. 이때 파일 이름 옆에 "직접 고침"이 붙는다
-- 다 고르면 [합치기 마무리] = git commit --no-edit. [합치기 취소] = git merge --abort (확인창)
-- 합치는 중에는 브랜치 옮기기·풀·푸시를 잠그고, 그래프 맨 아래 빨간 점선 "충돌 · 고를 파일 N개"
-
-main 최신 내용 받아오기
-- 머지는 GitHub PR로 하지만, PR이 "This branch has conflicts"가 되면 내 브랜치에서 풀어야 한다
-- 현재 브랜치를 볼 때 main에 이 브랜치에 없는 커밋이 있으면 "main에 새 커밋 N개 [main 최신 내용 받아오기 ↓]"
-- fetch → `git merge origin/main`(없으면 로컬 main)을 지금 브랜치에. main은 안 바뀜. 충돌하면 충돌 화면으로
-- 커밋 안 한 변경이 있으면 막고 먼저 커밋하라고 안내 (합치기 취소가 안전하게 되도록)
-
-언어 (한국어 / English)
-- 설정 창 [언어] 또는 `easygit.language` (auto = VS Code 표시 언어가 한국어면 한국어, 아니면 영어)
-- 문구는 코드에 `t("한국어", "English")`로 나란히 적는다. 확장 쪽 src/lang.ts, 화면 쪽 webview/i18n.ts
-- 화면이 조건에 쓰던 값은 언어와 무관한 코드로: 파일 상태 `modified/added/deleted/renamed/copied/conflict/changed`,
-  충돌 출처 `merge.from`(브랜치 이름) + `merge.fromRemote`
-- 명령 이름·설정 설명은 package.nls.json(영어) / package.nls.ko.json(한국어) — VS Code 표시 언어를 따른다
-- 커밋 기록에 남는 "되돌림: …" 제목도 그때 언어로 남는다
-
-후원
-- 설정 창 맨 아래 [후원하기]. 주소는 package.json의 `sponsor.url` (마켓플레이스 확장 페이지의 Sponsor 버튼과 같은 값).
-  비어 있으면 버튼이 안 보임 — **아직 주소를 안 넣었음**
-
-## 아직 안 되는 것
-- 실제 GitHub 계정으로 로그인·올리기·비공개 저장소 가져오기는 F5로 직접 확인 필요 (로컬에서는 흉내만 냄)
-- stash 다시 꺼내기 (잠시 치워둔 변경을 꺼내는 화면)
-- 브랜치 이름 바꾸기/지우기 (위험한 동작이라 확인창과 같이 4단계에서)
-
-## 구조
-```
-src/extension.ts   진입점. 명령 등록, 사이드바 버튼, 저장 이벤트
-src/panel.ts       큰 창(WebviewPanel) 열기, 웹뷰 ↔ 확장 메시지, 위험한 동작 확인창
-src/gitService.ts  git 읽기/쓰기 (simple-git). 화면은 이 파일 결과만 본다
-src/gitErrors.ts   git 영어 에러 → 초보자용 한국어 문장
-webview/App.tsx    화면 (React)
-webview/Graph.tsx  세로 줄기 그래프 (trunkOf: 커밋 출처·좌우 계산, Trunk: 그리기)
-webview/styles.css VS Code 테마 변수 사용 → 사용자 테마에 자동으로 맞음
-```
-
-git 메시지는 `LC_ALL=C`로 영어에 고정한다. 사용자 언어에 따라 문구가 바뀌면 gitErrors.ts가 못 알아본다.
-
-## 메시지 규약
-웹뷰 → 확장: `ready`, `refresh`, `openFile{path}`, `openDiff{path}`, `commit{paths,message}`, `push`, `pull`,
-`newBranch{from?}`, `switchBranch{name,remote}`, `init`, `clone`, `login`, `skipLogin`, `publish`,
-`undoCommit{hash}`, `revertCommit{hash}`, `setSkin{skin}`, `commitFiles{hash}`, `openCommitDiff{hash,path,oldPath?}`,
-`pullBranch{name}`, `setIdentity{name,email}`, `setPrefixes{prefixes}`, `setWarnOnMain{value}`, `switchAccount`,
-`resolveConflict{path,side}`, `editConflict{path}`, `markResolved{path}`, `compareConflict{path}`, `finishMerge`, `abortMerge`, `openSponsor`, `updateFromMain`, `setLanguage{language}`
-확장 → 웹뷰: `state{RepoState}`, `error{message, raw?}`, `config{commitPrefixes,defaultPrefixes,skin,warnOnMainBranch,sponsorUrl,language,languageSetting}`, `identity{name,email}`, `auth{account,skipped}`, `prefill{message}`, `commitFiles{hash,files}`
-
-## 설정
-위쪽 톱니바퀴 → 설정 창 (webview/Settings.tsx). 아래 VS Code 설정과 git 전역 설정을 화면에서 바꾼다.
-- 계정: GitHub 로그인 / 다른 계정으로 바꾸기, 커밋에 남는 이름·이메일 (git config --global user.name/email)
-- 언어: 한국어 / English
-- 스킨: 기본 / 픽셀 RPG
-- 말머리: 추가(“fix” → “fix: ”, “[FE]” → “[FE] ”로 맞춰 줌)·삭제·기본값으로
-- 알림: main 브랜치 경고 켜기/끄기
-
-- `easygit.warnOnMainBranch` — main/master에서 저장할 때 물어보기 (기본 켜짐)
-- `easygit.skin` — `vscode`(테마 따라감) / `pixel`(픽셀 RPG)
-- `easygit.language` — `auto` / `ko` / `en`
-- `easygit.commitPrefixes` — 커밋 말머리 목록. 팀 규칙에 맞게 바꾸면 드롭다운에 그대로 나온다
-
-새 기능은 (1) gitService에 함수 추가 → (2) panel.ts에 메시지 case 추가 → (3) App.tsx에 버튼 추가, 순서로.
+[MIT](LICENSE)

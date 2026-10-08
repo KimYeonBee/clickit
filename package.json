@@ -5,6 +5,14 @@
   "version": "0.0.1",
   "publisher": "yeonbi",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KimYeonBee/easygit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KimYeonBee/easygit/issues"
+  },
+  "homepage": "https://github.com/KimYeonBee/easygit#readme",
   "engines": {
     "vscode": "^1.85.0"
   },
