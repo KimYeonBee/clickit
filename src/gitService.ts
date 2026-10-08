@@ -485,7 +485,8 @@ export class GitService {
   async branchDeleteInfo(name: string, mainRef: string): Promise<{ merged: boolean; onGitHub: boolean; lost: string[] }> {
     const [ahead, remote, lost] = await Promise.all([
       this.git.raw(["rev-list", "--count", `${mainRef}..refs/heads/${name}`]).then((o) => parseInt(o.trim(), 10) || 0, () => 1),
-      this.git.raw(["rev-parse", "--verify", "--quiet", `refs/remotes/origin/${name}`]).then(() => true, () => false),
+      // --quiet면 없을 때 에러 문구 없이 빈 출력만 나와서 simple-git이 실패로 안 본다. 출력으로 판단한다
+      this.git.raw(["rev-parse", "--verify", "--quiet", `refs/remotes/origin/${name}`]).then((o) => o.trim() !== "", () => false),
       this.git
         .raw(["log", "--format=%s", `refs/heads/${name}`, "--not", "--remotes", `--exclude=${name}`, "--branches"])
         .then((o) => o.split("\n").filter(Boolean), () => [] as string[]),

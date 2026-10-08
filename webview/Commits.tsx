@@ -205,8 +205,6 @@ export function CommitList({
   onPending,
   busy,
   onJump,
-  onPush,
-  onPull,
 }: {
   history: History;
   /** "new" = 최신이 맨 위, "old" = 오래된 것이 맨 위 */
@@ -223,9 +221,6 @@ export function CommitList({
   busy: boolean;
   /** 갈라진 자리 칸을 누르면 그 브랜치로 옮긴다 */
   onJump: (branch: string) => void;
-  /** 구분줄에 붙는 버튼 — 없으면 버튼을 안 보여준다 */
-  onPush: (() => void) | null;
-  onPull: (() => void) | null;
 }) {
   const { items, fork } = history;
   const scroller = useRef<HTMLDivElement>(null);
@@ -316,9 +311,6 @@ export function CommitList({
                 stage={it.stage}
                 first={i === 0}
                 count={it.stage === "unpushed" ? unpushedCount : remoteCount}
-                busy={busy}
-                onPush={onPush}
-                onPull={onPull}
               />
             )}
             <button
@@ -348,22 +340,9 @@ export function CommitList({
 /**
  * 커밋 무더기를 가르는 줄. "여기부터는 아직 GitHub에 없어요" 처럼
  * 같은 처지의 커밋이 몇 개 쌓여 있는지를 한 줄로 알려준다.
+ * 풀·푸시 버튼은 일부러 안 붙인다 — 윗줄과 하단 안내줄에 이미 있어서 세 곳이 된다 (2026-10-08)
  */
-function Divider({
-  stage,
-  first,
-  count,
-  busy,
-  onPush,
-  onPull,
-}: {
-  stage: Stage;
-  first: boolean;
-  count: number;
-  busy: boolean;
-  onPush: (() => void) | null;
-  onPull: (() => void) | null;
-}) {
+function Divider({ stage, first, count }: { stage: Stage; first: boolean; count: number }) {
   // 맨 위부터 이미 올라가 있으면 굳이 알릴 게 없다
   if (stage === "synced" && first) return null;
 
@@ -371,11 +350,6 @@ function Divider({
     return (
       <div className="cdiv remote">
         <span className="cdiv-text">{t(`여기부터 GitHub에만 있어요 · ${count}개`, `On GitHub only from here · ${count}`)}</span>
-        {onPull && (
-          <button className="ghost tiny" disabled={busy} onClick={onPull}>
-            {t("풀 ↓", "Pull ↓")}
-          </button>
-        )}
       </div>
     );
 
@@ -383,11 +357,6 @@ function Divider({
     return (
       <div className="cdiv unpushed">
         <span className="cdiv-text">{t(`여기부터 아직 GitHub에 없어요 · ${count}개`, `Not on GitHub yet from here · ${count}`)}</span>
-        {onPush && (
-          <button className="ghost tiny" disabled={busy} onClick={onPush}>
-            {t("푸시 ↑", "Push ↑")} <b>{count}</b>
-          </button>
-        )}
       </div>
     );
 

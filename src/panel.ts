@@ -127,7 +127,17 @@ export class EasyGitPanel {
     this.panel = panel;
     panel.webview.html = this.html();
 
-    panel.webview.onDidReceiveMessage((m: InMessage) => this.onMessage(m), null, this.disposables);
+    // 처리 중 예상 못 한 에러가 나도 버튼이 "아무 반응 없음"으로 끝나지 않게 화면에 알린다
+    panel.webview.onDidReceiveMessage(
+      (m: InMessage) =>
+        this.onMessage(m).catch(async (e: any) => {
+          const raw = e?.message ?? String(e);
+          await this.refresh().catch(() => undefined);
+          this.post({ type: "error", message: translateGitError(raw), raw });
+        }),
+      null,
+      this.disposables
+    );
     panel.onDidDispose(() => this.dispose(), null, this.disposables);
 
     // 파일이 바뀌면 자동으로 다시 읽기 (너무 자주 안 읽도록 300ms 모아서)

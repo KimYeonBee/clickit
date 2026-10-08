@@ -186,7 +186,7 @@ export function App() {
   // 고정해 둔 브랜치 중 지금 실제로 있는 것만. 메인·현재는 이미 버튼이 있으니 뺀다
   const pinnedNow = pinned.filter((b) => b !== state.mainBranch && b !== state.branch && locals.some((l) => l.name === b));
   const history = historyOf(state.commits, state.branches, viewBranch, state.mainBranch, facts);
-  // 지금 작업 중인 브랜치를 보고 있을 때만 목록 안에서 바로 풀·푸시를 할 수 있다
+  // 다른 브랜치를 볼 때만 목록 위에 'GitHub에 새 커밋' 띠를 띄운다. 지금 브랜치면 윗줄 풀 버튼이 이미 알려준다
   const onCurrentBranch = viewBranch === state.branch;
   const allChecked = state.files.length > 0 && checkedCount === state.files.length;
   const issue = state.branch.match(/(?:^|[/_-])(\d{1,6})(?:[/_-]|$)/)?.[1];
@@ -332,7 +332,9 @@ export function App() {
                           send({ type: "deleteBranch", name: b.name });
                         }}
                       >
-                        🗑
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6" />
+                        </svg>
                       </button>
                     )}
                   </div>
@@ -404,7 +406,6 @@ export function App() {
                 onClick={doPublish}
               >
                 <span className="sync-word">{t("GitHub에 올리기", "Publish to GitHub")} ↑</span>
-                <span className="sync-sub">{t("새로 만들기 · 연결하기", "Create or connect")}</span>
               </button>
             )}
             </div>
@@ -556,8 +557,6 @@ export function App() {
             onPending={() => setPicked(null)}
             busy={busy !== null || !!state.merge}
             onJump={moveTo}
-            onPush={onCurrentBranch && state.hasRemote && !state.merge ? doPush : null}
-            onPull={onCurrentBranch && state.hasRemote && !state.merge ? doPull : null}
           />
           </>
           )}
@@ -623,7 +622,9 @@ export function App() {
                           aria-label={t("변경 버리기", "Discard changes")}
                           onClick={() => send({ type: "discardFile", path: f.path })}
                         >
-                          ↺
+                          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" />
+                          </svg>
                         </button>
                       )}
                     </li>

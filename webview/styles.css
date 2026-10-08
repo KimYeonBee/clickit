@@ -89,7 +89,6 @@ h2 { font-size: 13px; font-weight: 600; margin: 0 0 10px; display: flex; align-i
 /* 원어(풀·푸시)는 크게, 어느 쪽으로 가는 건지는 작게 한 줄 더 */
 .sync .ghost { flex-direction: column; align-items: flex-start; gap: 0; padding: 4px 12px; }
 .sync-word { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; }
-.sync-sub { font-size: 10px; color: var(--dim); }
 
 .ghost {
   padding: 6px 12px; border: 1px solid var(--line); background: transparent;
@@ -133,11 +132,11 @@ h2 { font-size: 13px; font-weight: 600; margin: 0 0 10px; display: flex; align-i
 .menu-row { display: flex; align-items: center; }
 .menu-row .menu-item { flex: 1; min-width: 0; }
 .menu-del {
-  flex: none; width: 26px; height: 26px; margin-right: 4px; padding: 0; border: 0; border-radius: 4px;
-  background: none; font-size: 12px; opacity: 0; cursor: pointer; filter: grayscale(1);
+  flex: none; display: grid; place-items: center; width: 26px; height: 26px; margin-right: 4px; padding: 0;
+  border: 0; border-radius: 4px; background: none; color: var(--dim); opacity: 0; cursor: pointer;
 }
-.menu-row:hover .menu-del, .menu-del:focus-visible { opacity: .8; }
-.menu-del:hover { opacity: 1; filter: none; background: color-mix(in srgb, var(--err) 15%, transparent); }
+.menu-row:hover .menu-del, .menu-del:focus-visible { opacity: 1; }
+.menu-del:hover { color: var(--err); background: color-mix(in srgb, var(--err) 15%, transparent); }
 
 /* 본문: 왼쪽 커밋 목록 / 오른쪽 작업 */
 .body { display: grid; grid-template-columns: minmax(280px, 5fr) minmax(360px, 6fr); min-height: 0; }
@@ -345,6 +344,7 @@ h2 { font-size: 13px; font-weight: 600; margin: 0 0 10px; display: flex; align-i
 /* 버리기는 손이 갈 때만 보이게. 늘 보이면 실수로 누르기 쉽고 목록이 번잡해진다 */
 .files.uncommitted li { grid-template-columns: 28px 1fr auto auto 22px; }
 .discard {
+  display: grid; place-items: center;
   background: none; border: 0; padding: 0; width: 22px; height: 22px; border-radius: 4px;
   color: var(--dim); opacity: 0; cursor: pointer;
 }
