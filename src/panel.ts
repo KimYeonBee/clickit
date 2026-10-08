@@ -54,6 +54,7 @@ type InMessage =
   | { type: "openSponsor" }
   | { type: "openRepoPage" }
   | { type: "openPullRequest" }
+  | { type: "deleteBranch"; name: string }
   | { type: "popStash" }
   | { type: "discardFile"; path: string }
   | { type: "ignoreFiles"; patterns: string[] }
@@ -448,6 +449,59 @@ export class EasyGitPanel {
     return `${page}/compare/${enc(state.mainBranch)}...${enc(state.branch)}?expand=1`;
   }
 
+  /** 내 컴퓨터에서만 브랜치를 지운다. 지우면 잃는 커밋이 있는지에 따라 확인창 내용이 달라진다 */
+  private async deleteBranchFlow(name: string) {
+    const state = await this.git.getState();
+    const local = state.branches.find((b) => !b.remote && b.name === name);
+    if (!local || name === state.branch || name === state.mainBranch) return this.refresh();
+    const mainRef = state.branches.some((b) => b.name === `origin/${state.mainBranch}`) ? `origin/${state.mainBranch}` : state.mainBranch;
+    const info = await this.git.branchDeleteInfo(name, mainRef);
+
+    const footer = t(
+      "내 컴퓨터에서만 지워요. GitHub에 있는 브랜치는 그대로예요.",
+      "This only deletes it on your computer. The branch on GitHub stays."
+    );
+    let detail: string;
+    if (info.lost.length > 0) {
+      const shown = info.lost.slice(0, 5).map((s) => `· ${s}`).join("\n");
+      const more = info.lost.length > 5 ? t(`\n· …외 ${info.lost.length - 5}개`, `\n· …and ${info.lost.length - 5} more`) : "";
+      detail = t(
+        `⚠️ 이 브랜치에만 있는 커밋 ${info.lost.length}개가 사라져요. GitHub에도, 다른 브랜치에도 없어요.\n\n${shown}${more}`,
+        `⚠️ ${info.lost.length} commit(s) exist only on this branch and will be gone. They're not on GitHub or any other branch.\n\n${shown}${more}`
+      );
+    } else if (info.merged) {
+      detail = t(
+        `이 브랜치의 커밋은 ${state.mainBranch}에 다 들어가 있어요. 지워도 잃는 게 없어요.\n\n${footer}`,
+        `All its commits are already in ${state.mainBranch}. Nothing is lost.\n\n${footer}`
+      );
+    } else if (info.onGitHub) {
+      detail = t(
+        `아직 ${state.mainBranch}에 합쳐지지 않았지만 GitHub에 올라가 있어서, 필요하면 다시 가져올 수 있어요.\n\n${footer}`,
+        `It isn't merged into ${state.mainBranch} yet, but it's on GitHub, so you can bring it back anytime.\n\n${footer}`
+      );
+    } else {
+      detail = t("이 브랜치의 커밋은 다른 브랜치에도 있어서 잃는 게 없어요.", "Its commits are on another branch too, so nothing is lost.");
+    }
+
+    const DELETE = t("삭제", "Delete");
+    const pick = await vscode.window.showWarningMessage(
+      t(`'${name}' 브랜치를 정말 삭제하시겠습니까?`, `Are you sure you want to delete the branch '${name}'?`),
+      { modal: true, detail },
+      DELETE
+    );
+    if (pick !== DELETE) return;
+
+    await this.runAction(async () => {
+      await this.git.deleteBranch(name);
+      // 고정해 둔 브랜치였다면 윗줄 버튼도 같이 치운다
+      const pinned = this.context.workspaceState.get<string[]>(PINNED_BRANCHES, []);
+      if (pinned.includes(name)) {
+        await this.context.workspaceState.update(PINNED_BRANCHES, pinned.filter((b) => b !== name));
+        this.postConfig();
+      }
+    });
+  }
+
   /** 지금 브랜치에 치워둔 변경 중 가장 최근 것을 다시 꺼낸다 */
   private async popStashFlow() {
     const state = await this.git.getState();
@@ -634,6 +688,9 @@ export class EasyGitPanel {
         if (url) await vscode.env.openExternal(vscode.Uri.parse(url));
         break;
       }
+      case "deleteBranch":
+        await this.deleteBranchFlow(m.name);
+        break;
       case "popStash":
         await this.popStashFlow();
         break;

@@ -478,6 +478,26 @@ export class GitService {
     }
   }
 
+  /**
+   * 브랜치를 지우기 전에 알려줄 것들.
+   * lost: 이 브랜치에만 있어서 지우면 찾기 어려워지는 커밋 제목들 (다른 브랜치나 GitHub에 있는 커밋은 안 센다)
+   */
+  async branchDeleteInfo(name: string, mainRef: string): Promise<{ merged: boolean; onGitHub: boolean; lost: string[] }> {
+    const [ahead, remote, lost] = await Promise.all([
+      this.git.raw(["rev-list", "--count", `${mainRef}..refs/heads/${name}`]).then((o) => parseInt(o.trim(), 10) || 0, () => 1),
+      this.git.raw(["rev-parse", "--verify", "--quiet", `refs/remotes/origin/${name}`]).then(() => true, () => false),
+      this.git
+        .raw(["log", "--format=%s", `refs/heads/${name}`, "--not", "--remotes", `--exclude=${name}`, "--branches"])
+        .then((o) => o.split("\n").filter(Boolean), () => [] as string[]),
+    ]);
+    return { merged: ahead === 0, onGitHub: remote, lost };
+  }
+
+  /** 내 컴퓨터의 브랜치만 지운다. GitHub 쪽은 건드리지 않는다. 확인은 부르는 쪽에서 이미 받았다 */
+  async deleteBranch(name: string): Promise<void> {
+    await this.git.raw(["branch", "-D", "--", name]);
+  }
+
   private async countAhead(base: string): Promise<number> {
     try {
       return parseInt((await this.git.raw(["rev-list", "--count", `${base}..HEAD`])).trim(), 10) || 0;

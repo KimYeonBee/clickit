@@ -314,11 +314,28 @@ export function App() {
                 </button>
                 <div className="menu-section">{t("내 브랜치", "My branches")}</div>
                 {locals.map((b) => (
-                  <button key={b.name} className="menu-item" disabled={b.current} onClick={() => switchTo(b.name, false)}>
-                    <span className="tick">{b.current ? "✓" : ""}</span>
-                    <span className="menu-name">{b.name}</span>
-                    {b.current && <span className="menu-hint">{t("지금 여기", "current")}</span>}
-                  </button>
+                  <div key={b.name} className="menu-row">
+                    <button className="menu-item" disabled={b.current} onClick={() => switchTo(b.name, false)}>
+                      <span className="tick">{b.current ? "✓" : ""}</span>
+                      <span className="menu-name">{b.name}</span>
+                      {b.current && <span className="menu-hint">{t("지금 여기", "current")}</span>}
+                    </button>
+                    {/* 지금 있는 브랜치와 메인은 지울 수 없게 버튼을 아예 안 단다 */}
+                    {!b.current && b.name !== state.mainBranch && (
+                      <button
+                        className="menu-del"
+                        disabled={busy !== null}
+                        title={t("이 브랜치 삭제 (내 컴퓨터에서만)", "Delete this branch (on your computer only)")}
+                        aria-label={t(`'${b.name}' 브랜치 삭제`, `Delete branch '${b.name}'`)}
+                        onClick={() => {
+                          setMenuOpen(false);
+                          send({ type: "deleteBranch", name: b.name });
+                        }}
+                      >
+                        🗑
+                      </button>
+                    )}
+                  </div>
                 ))}
                 {remoteOnly.length > 0 && <div className="menu-section">{t("GitHub에만 있는 브랜치", "Only on GitHub")}</div>}
                 {remoteOnly.map((b) => (
@@ -359,7 +376,6 @@ export function App() {
                   <span className="sync-word">
                     {t("풀", "Pull")} ↓{state.behind > 0 && <b>{state.behind}</b>}
                   </span>
-                  <span className="sync-sub">{t("받아오기", "Bring in")}</span>
                 </button>
                 <button
                   className="ghost"
@@ -370,7 +386,6 @@ export function App() {
                   <span className="sync-word">
                     {t("푸시", "Push")} ↑{state.ahead > 0 && <b>{state.ahead}</b>}
                   </span>
-                  <span className="sync-sub">{t("올려보내기", "Send up")}</span>
                 </button>
               </>
             ) : (

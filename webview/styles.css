@@ -129,6 +129,15 @@ h2 { font-size: 13px; font-weight: 600; margin: 0 0 10px; display: flex; align-i
 .tick { width: 12px; color: var(--accent); flex: none; }
 .menu-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .menu-hint { margin-left: auto; color: var(--dim); font-size: 11px; flex: none; }
+/* 브랜치 줄 오른쪽 삭제 버튼. 줄에 마우스를 올릴 때만 보여서 평소 목록이 번잡하지 않다 */
+.menu-row { display: flex; align-items: center; }
+.menu-row .menu-item { flex: 1; min-width: 0; }
+.menu-del {
+  flex: none; width: 26px; height: 26px; margin-right: 4px; padding: 0; border: 0; border-radius: 4px;
+  background: none; font-size: 12px; opacity: 0; cursor: pointer; filter: grayscale(1);
+}
+.menu-row:hover .menu-del, .menu-del:focus-visible { opacity: .8; }
+.menu-del:hover { opacity: 1; filter: none; background: color-mix(in srgb, var(--err) 15%, transparent); }
 
 /* 본문: 왼쪽 커밋 목록 / 오른쪽 작업 */
 .body { display: grid; grid-template-columns: minmax(280px, 5fr) minmax(360px, 6fr); min-height: 0; }
