@@ -158,7 +158,7 @@ const baseEnv = () => ({ ...process.env, LC_ALL: "C", LANG: "C", GIT_TERMINAL_PR
 const GITHUB_HELPER = "credential.https://github.com.helper";
 const githubCredentialConfig = [
   `${GITHUB_HELPER}=`,
-  `${GITHUB_HELPER}=!f() { test "$1" = get && printf 'username=%s\\npassword=%s\\n' "$EASYGIT_GH_USER" "$EASYGIT_GH_TOKEN"; }; f`,
+  `${GITHUB_HELPER}=!f() { test "$1" = get && printf 'username=%s\\npassword=%s\\n' "$CLICKIT_GH_USER" "$CLICKIT_GH_TOKEN"; }; f`,
 ];
 
 export class GitService {
@@ -176,8 +176,8 @@ export class GitService {
     if (!auth) return simpleGit({ baseDir: this.root, ...UNSAFE_OK }).env(baseEnv());
     return simpleGit({ baseDir: this.root, config: githubCredentialConfig, ...UNSAFE_OK }).env({
       ...baseEnv(),
-      EASYGIT_GH_USER: auth.user,
-      EASYGIT_GH_TOKEN: auth.token,
+      CLICKIT_GH_USER: auth.user,
+      CLICKIT_GH_TOKEN: auth.token,
     });
   }
 
@@ -203,7 +203,7 @@ export class GitService {
    */
   static async clone(url: string, parentDir: string, name: string, auth?: GitAuth): Promise<string> {
     const env = auth
-      ? { ...baseEnv(), EASYGIT_GH_USER: auth.user, EASYGIT_GH_TOKEN: auth.token }
+      ? { ...baseEnv(), CLICKIT_GH_USER: auth.user, CLICKIT_GH_TOKEN: auth.token }
       : baseEnv();
     const config = auth ? githubCredentialConfig : [];
     await simpleGit({ baseDir: parentDir, config, ...UNSAFE_OK }).env(env).clone(url, name);

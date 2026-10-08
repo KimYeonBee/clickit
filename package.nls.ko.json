@@ -1,14 +1,14 @@
 {
   "description": "git을 처음 쓰는 사람을 위한 올인원 화면. 커밋, 푸시, 브랜치를 버튼으로.",
-  "command.open": "EasyGit 열기",
+  "command.open": "Clickit 열기",
   "command.newBranch": "새 브랜치 만들기",
   "command.clone": "GitHub 저장소 가져오기",
   "command.publish": "GitHub에 올리기 (새 저장소 만들기)",
   "config.warnOnMainBranch": "main/master 브랜치에서 파일을 저장하면 정말 이 브랜치가 맞는지 물어봅니다.",
-  "config.skin": "EasyGit 화면 스킨.",
+  "config.skin": "Clickit 화면 스킨.",
   "config.skin.vscode": "VS Code 테마 색을 그대로 따라가요",
   "config.skin.pixel": "옛날 게임기 같은 픽셀 RPG 스타일",
   "config.commitPrefixes": "커밋 메시지 앞에 붙일 말머리 목록. 커밋 칸 옆 드롭다운에 나옵니다. 빈 목록으로 두면 드롭다운이 안 보입니다.",
   "config.language.auto": "VS Code 표시 언어를 따라가요",
-  "config.language": "EasyGit 화면·안내 문구 언어."
+  "config.language": "Clickit 화면·안내 문구 언어."
 }

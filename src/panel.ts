@@ -8,14 +8,14 @@ import { getGitHubAuth, isGitHubUrl, withGitHubLogin } from "./github";
 import { webUrlFromRemote } from "./cloneUrl";
 
 /** 시작할 때 보여주는 GitHub 로그인 안내를 "나중에"로 넘겼는지 */
-export const LOGIN_SKIPPED = "easygit.loginSkipped";
+export const LOGIN_SKIPPED = "clickit.loginSkipped";
 /**
  * 윗줄에 늘 띄워 둘 브랜치. 브랜치 이름은 저장소마다 다르니 설정 파일이 아니라
  * 이 워크스페이스의 기억에만 담는다 (.vscode/settings.json을 건드리면 그게 '바뀐 파일'로 잡힌다).
  */
-export const PINNED_BRANCHES = "easygit.pinnedBranches";
+export const PINNED_BRANCHES = "clickit.pinnedBranches";
 /** .gitignore 안내에서 "그냥 둘래요"를 고른 줄들. 저장소마다 다르니 워크스페이스에 기억한다 */
-export const IGNORE_DISMISSED = "easygit.ignoreDismissed";
+export const IGNORE_DISMISSED = "clickit.ignoreDismissed";
 
 /** 웹뷰 → 확장 */
 type InMessage =
@@ -87,14 +87,14 @@ type OutMessage =
   | { type: "prefill"; message: string }
   | { type: "commitFiles"; hash: string; files: CommitFile[] };
 
-/** extension.ts의 easygit: 내용 제공자가 읽는 주소. ref가 null이면 빈 파일 */
+/** extension.ts의 clickit: 내용 제공자가 읽는 주소. ref가 null이면 빈 파일 */
 function versionUri(ref: string | null, relPath: string): vscode.Uri {
   // 경로를 그대로 둬야 확장자로 문법 색이 입혀진다. ref가 다르면 주소도 달라야 VS Code가 따로 읽는다
-  return vscode.Uri.from({ scheme: "easygit", path: "/" + relPath.split(path.sep).join("/"), query: JSON.stringify({ ref }) });
+  return vscode.Uri.from({ scheme: "clickit", path: "/" + relPath.split(path.sep).join("/"), query: JSON.stringify({ ref }) });
 }
 
-export class EasyGitPanel {
-  public static current: EasyGitPanel | undefined;
+export class ClickitPanel {
+  public static current: ClickitPanel | undefined;
   private readonly panel: vscode.WebviewPanel;
   private disposables: vscode.Disposable[] = [];
   private refreshTimer: NodeJS.Timeout | undefined;
@@ -102,13 +102,13 @@ export class EasyGitPanel {
   private identityAsked = false;
 
   static open(context: vscode.ExtensionContext, git: GitService) {
-    if (EasyGitPanel.current) {
-      EasyGitPanel.current.panel.reveal(vscode.ViewColumn.One);
+    if (ClickitPanel.current) {
+      ClickitPanel.current.panel.reveal(vscode.ViewColumn.One);
       return;
     }
     const panel = vscode.window.createWebviewPanel(
-      "easygit.panel",
-      "EasyGit",
+      "clickit.panel",
+      "Clickit",
       vscode.ViewColumn.One,
       {
         enableScripts: true,
@@ -116,7 +116,7 @@ export class EasyGitPanel {
         localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, "dist")],
       }
     );
-    EasyGitPanel.current = new EasyGitPanel(panel, context, git);
+    ClickitPanel.current = new ClickitPanel(panel, context, git);
   }
 
   private constructor(
@@ -149,7 +149,7 @@ export class EasyGitPanel {
 
     vscode.workspace.onDidChangeConfiguration(
       (e) => {
-        if (e.affectsConfiguration("easygit")) this.postConfig();
+        if (e.affectsConfiguration("clickit")) this.postConfig();
       },
       null,
       this.disposables
@@ -204,7 +204,7 @@ export class EasyGitPanel {
   }
 
   private postConfig() {
-    const config = vscode.workspace.getConfiguration("easygit");
+    const config = vscode.workspace.getConfiguration("clickit");
     this.post({
       type: "config",
       commitPrefixes: config.get<string[]>("commitPrefixes", []),
@@ -365,7 +365,7 @@ export class EasyGitPanel {
     });
     if (!picked) return;
     if (picked.label === NEW) {
-      await vscode.commands.executeCommand("easygit.newBranch");
+      await vscode.commands.executeCommand("clickit.newBranch");
       await this.refresh();
       return;
     }
@@ -685,7 +685,7 @@ export class EasyGitPanel {
         );
         break;
       case "setLanguage":
-        await vscode.workspace.getConfiguration("easygit").update("language", m.language, vscode.ConfigurationTarget.Global);
+        await vscode.workspace.getConfiguration("clickit").update("language", m.language, vscode.ConfigurationTarget.Global);
         break;
       case "openRepoPage": {
         const remote = await this.git.remoteUrl();
@@ -754,10 +754,10 @@ export class EasyGitPanel {
         await this.postIdentity();
         break;
       case "setPrefixes":
-        await vscode.workspace.getConfiguration("easygit").update("commitPrefixes", m.prefixes, vscode.ConfigurationTarget.Global);
+        await vscode.workspace.getConfiguration("clickit").update("commitPrefixes", m.prefixes, vscode.ConfigurationTarget.Global);
         break;
       case "setWarnOnMain":
-        await vscode.workspace.getConfiguration("easygit").update("warnOnMainBranch", m.value, vscode.ConfigurationTarget.Global);
+        await vscode.workspace.getConfiguration("clickit").update("warnOnMainBranch", m.value, vscode.ConfigurationTarget.Global);
         break;
       case "setPinnedBranches":
         // 워크스페이스 기억은 설정 바뀜 알림이 안 오니 직접 다시 보내 준다
@@ -818,7 +818,7 @@ export class EasyGitPanel {
         await this.postAuth();
         break;
       case "publish":
-        await vscode.commands.executeCommand("easygit.publish");
+        await vscode.commands.executeCommand("clickit.publish");
         await this.refresh();
         break;
       case "undoCommit":
@@ -848,7 +848,7 @@ export class EasyGitPanel {
       }
       case "setSkin":
         // 설정에 저장해 두면 다음에 열어도 유지되고, 설정 화면에서도 보인다 (바뀌면 postConfig가 다시 보냄)
-        await vscode.workspace.getConfiguration("easygit").update("skin", m.skin, vscode.ConfigurationTarget.Global);
+        await vscode.workspace.getConfiguration("clickit").update("skin", m.skin, vscode.ConfigurationTarget.Global);
         break;
       case "openFile": {
         const uri = vscode.Uri.file(path.join(this.git.root, m.path));
@@ -930,7 +930,7 @@ export class EasyGitPanel {
         });
         break;
       case "newBranch":
-        await vscode.commands.executeCommand("easygit.newBranch", m.from);
+        await vscode.commands.executeCommand("clickit.newBranch", m.from);
         await this.refresh();
         break;
       case "init": {
@@ -969,7 +969,7 @@ export class EasyGitPanel {
         break;
       }
       case "clone":
-        await vscode.commands.executeCommand("easygit.clone");
+        await vscode.commands.executeCommand("clickit.clone");
         await this.refresh();
         break;
       case "switchBranch":
@@ -991,7 +991,7 @@ export class EasyGitPanel {
   content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}'; font-src ${webview.cspSource};">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="${style}">
-<title>EasyGit</title>
+<title>Clickit</title>
 </head>
 <body>
 <div id="root"></div>
@@ -1002,7 +1002,7 @@ export class EasyGitPanel {
 
   private dispose() {
     this.disposed = true;
-    EasyGitPanel.current = undefined;
+    ClickitPanel.current = undefined;
     this.panel.dispose();
     for (const d of this.disposables) d.dispose();
     this.disposables = [];

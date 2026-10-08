@@ -1,18 +1,18 @@
 {
-  "name": "easygit",
-  "displayName": "EasyGit",
+  "name": "clickit",
+  "displayName": "Clickit — Git for Beginners",
   "description": "%description%",
   "version": "0.0.2",
-  "publisher": "yeonbi",
+  "publisher": "yeonbee",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KimYeonBee/easygit.git"
+    "url": "https://github.com/KimYeonBee/clickit.git"
   },
   "bugs": {
-    "url": "https://github.com/KimYeonBee/easygit/issues"
+    "url": "https://github.com/KimYeonBee/clickit/issues"
   },
-  "homepage": "https://github.com/KimYeonBee/easygit#readme",
+  "homepage": "https://github.com/KimYeonBee/clickit#readme",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -27,53 +27,53 @@
   "contributes": {
     "commands": [
       {
-        "command": "easygit.open",
+        "command": "clickit.open",
         "title": "%command.open%",
-        "category": "EasyGit"
+        "category": "Clickit"
       },
       {
-        "command": "easygit.newBranch",
+        "command": "clickit.newBranch",
         "title": "%command.newBranch%",
-        "category": "EasyGit"
+        "category": "Clickit"
       },
       {
-        "command": "easygit.clone",
+        "command": "clickit.clone",
         "title": "%command.clone%",
-        "category": "EasyGit"
+        "category": "Clickit"
       },
       {
-        "command": "easygit.publish",
+        "command": "clickit.publish",
         "title": "%command.publish%",
-        "category": "EasyGit"
+        "category": "Clickit"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "easygit",
-          "title": "EasyGit",
+          "id": "clickit",
+          "title": "Clickit",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "easygit": [
+      "clickit": [
         {
-          "id": "easygit.launcher",
-          "name": "EasyGit",
+          "id": "clickit.launcher",
+          "name": "Clickit",
           "type": "webview"
         }
       ]
     },
     "configuration": {
-      "title": "EasyGit",
+      "title": "Clickit",
       "properties": {
-        "easygit.warnOnMainBranch": {
+        "clickit.warnOnMainBranch": {
           "type": "boolean",
           "default": true,
           "description": "%config.warnOnMainBranch%"
         },
-        "easygit.skin": {
+        "clickit.skin": {
           "type": "string",
           "enum": [
             "vscode",
@@ -86,7 +86,7 @@
           "default": "vscode",
           "description": "%config.skin%"
         },
-        "easygit.language": {
+        "clickit.language": {
           "type": "string",
           "enum": [
             "auto",
@@ -101,7 +101,7 @@
           "default": "auto",
           "description": "%config.language%"
         },
-        "easygit.commitPrefixes": {
+        "clickit.commitPrefixes": {
           "type": "array",
           "items": {
             "type": "string"

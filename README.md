@@ -1,4 +1,4 @@
-# EasyGit
+# Clickit
 
 **git을 처음 쓰는 사람을 위한 VS Code 확장.**
 커밋·푸시·풀·브랜치를 큰 창 하나에서 버튼으로 해요. 명령어를 외우지 않아도, 화면 맨 아래 안내줄이 지금 할 일과 그 버튼을 알려줘요.
@@ -42,14 +42,14 @@
 ## 시작하기
 
 1. 확장을 설치해요.
-2. 왼쪽 막대의 EasyGit 아이콘 → **EasyGit 열기**. (또는 `Ctrl/⌘ + Shift + P` → "EasyGit 열기")
+2. 왼쪽 막대의 Clickit 아이콘 → **Clickit 열기**. (또는 `Ctrl/⌘ + Shift + P` → "Clickit 열기")
 3. 그다음은 화면 맨 아래 안내줄을 따라가면 돼요.
 
 GitHub에 올리거나 비공개 저장소를 가져올 때는 GitHub 로그인이 필요해요. 필요한 순간에 한 번만 물어봐요.
 
 ## 안심하고 쓰셔도 돼요
 
-- GitHub 로그인은 VS Code에 들어 있는 GitHub 계정 기능을 그대로 써요. 비밀번호를 EasyGit이 받지 않아요.
+- GitHub 로그인은 VS Code에 들어 있는 GitHub 계정 기능을 그대로 써요. 비밀번호를 Clickit이 받지 않아요.
 - 로그인 토큰은 github.com에 접속할 때만 git에 넘기고, 파일이나 다른 곳에 저장하지 않아요.
 - 푸시·되돌리기·변경 버리기처럼 되돌리기 어려운 일은 항상 확인창을 먼저 띄워요.
 - 머지(합치기)는 일부러 넣지 않았어요. 팀원이 검토할 수 있게 GitHub의 PR에서 하는 걸 권해요.
@@ -60,14 +60,14 @@ GitHub에 올리거나 비공개 저장소를 가져올 때는 GitHub 로그인�
 
 | 설정 | 설명 |
 |---|---|
-| `easygit.language` | `auto`(VS Code 언어 따라감) / `ko` / `en` |
-| `easygit.skin` | `vscode` / `pixel` |
-| `easygit.warnOnMainBranch` | main에서 파일을 고치면 "이 브랜치 맞아요?" 물어보기 |
-| `easygit.commitPrefixes` | 커밋 메시지 앞에 붙일 말머리 (`fix: ` 같은 것) |
+| `clickit.language` | `auto`(VS Code 언어 따라감) / `ko` / `en` |
+| `clickit.skin` | `vscode` / `pixel` |
+| `clickit.warnOnMainBranch` | main에서 파일을 고치면 "이 브랜치 맞아요?" 물어보기 |
+| `clickit.commitPrefixes` | 커밋 메시지 앞에 붙일 말머리 (`fix: ` 같은 것) |
 
 ## 피드백
 
-버그나 "여기서 뭘 해야 할지 모르겠어요" 같은 의견은 [이슈](https://github.com/KimYeonBee/easygit/issues)에 남겨 주세요.
+버그나 "여기서 뭘 해야 할지 모르겠어요" 같은 의견은 [이슈](https://github.com/KimYeonBee/clickit/issues)에 남겨 주세요.
 헷갈렸던 순간이 이 확장을 고치는 가장 좋은 재료예요.
 
 ## 개발
@@ -95,9 +95,9 @@ Commit, push, pull and branch with buttons in one big window. A guide line at th
 - Undo unpushed commits, revert pushed ones, and read git errors in plain words
 - Korean / English, default and pixel RPG skins
 
-**Getting started**: install, click the EasyGit icon in the Activity Bar → **Open EasyGit**, then follow the bottom line.
+**Getting started**: install, click the Clickit icon in the Activity Bar → **Open Clickit**, then follow the bottom line.
 
-Sign-in uses VS Code's built-in GitHub account. Your token is only passed to git when talking to github.com and is never stored by EasyGit.
+Sign-in uses VS Code's built-in GitHub account. Your token is only passed to git when talking to github.com and is never stored by Clickit.
 
 ## License
 

@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { GitService } from "./gitService";
-import { EasyGitPanel } from "./panel";
+import { ClickitPanel } from "./panel";
 import { translateGitError } from "./gitErrors";
 import { checkCloneUrl, normalizeCloneUrl, repoNameFromUrl, webUrlFromRemote } from "./cloneUrl";
 import { Lang, setLang, t } from "./lang";
@@ -17,8 +17,8 @@ import {
   withGitHubLogin,
 } from "./github";
 
-/** 가져온 저장소를 열면 창이 새로 뜨므로, 그 창에서 EasyGit을 바로 열어주려고 남겨두는 표시 */
-const OPEN_AFTER_CLONE = "easygit.openAfterClone";
+/** 가져온 저장소를 열면 창이 새로 뜨므로, 그 창에서 Clickit을 바로 열어주려고 남겨두는 표시 */
+const OPEN_AFTER_CLONE = "clickit.openAfterClone";
 
 let cachedGit: GitService | undefined;
 
@@ -30,9 +30,9 @@ function currentGit(): GitService | undefined {
   return cachedGit;
 }
 
-/** 설정(easygit.language)이 auto면 VS Code 표시 언어가 한국어일 때만 한국어 */
+/** 설정(clickit.language)이 auto면 VS Code 표시 언어가 한국어일 때만 한국어 */
 function resolveLang(): Lang {
-  const v = vscode.workspace.getConfiguration("easygit").get<string>("language", "auto");
+  const v = vscode.workspace.getConfiguration("clickit").get<string>("language", "auto");
   if (v === "ko" || v === "en") return v;
   return vscode.env.language.toLowerCase().startsWith("ko") ? "ko" : "en";
 }
@@ -42,14 +42,14 @@ async function askToOpenFolder() {
   const CLONE = t("GitHub 저장소 가져오기", "Clone from GitHub");
   const pick = await vscode.window.showInformationMessage(
     t(
-      "EasyGit은 폴더 안에서 동작해요. 작업할 프로젝트 폴더를 열거나, GitHub에서 가져와 주세요.",
-      "EasyGit works inside a folder. Open your project folder or clone one from GitHub."
+      "Clickit은 폴더 안에서 동작해요. 작업할 프로젝트 폴더를 열거나, GitHub에서 가져와 주세요.",
+      "Clickit works inside a folder. Open your project folder or clone one from GitHub."
     ),
     OPEN,
     CLONE
   );
   if (pick === OPEN) await vscode.commands.executeCommand("vscode.openFolder");
-  else if (pick === CLONE) await vscode.commands.executeCommand("easygit.clone");
+  else if (pick === CLONE) await vscode.commands.executeCommand("clickit.clone");
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -57,15 +57,15 @@ export function activate(context: vscode.ExtensionContext) {
   const launcher = new LauncherView(context.extensionUri);
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (!e.affectsConfiguration("easygit.language")) return;
+      if (!e.affectsConfiguration("clickit.language")) return;
       setLang(resolveLang());
       launcher.render();
     })
   );
 
-  // 비교 화면의 "예전 버전" 쪽 내용. easygit:/경로?{"ref":"커밋^"} → git show 커밋^:경로 (없으면 빈 화면)
+  // 비교 화면의 "예전 버전" 쪽 내용. clickit:/경로?{"ref":"커밋^"} → git show 커밋^:경로 (없으면 빈 화면)
   context.subscriptions.push(
-    vscode.workspace.registerTextDocumentContentProvider("easygit", {
+    vscode.workspace.registerTextDocumentContentProvider("clickit", {
       provideTextDocumentContent: async (uri) => {
         const git = currentGit();
         const ref: string | null = JSON.parse(uri.query || "{}").ref ?? null;
@@ -75,11 +75,11 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
   context.subscriptions.push(
-    vscode.commands.registerCommand("easygit.clone", () => cloneFlow(context))
+    vscode.commands.registerCommand("clickit.clone", () => cloneFlow(context))
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("easygit.publish", () => {
+    vscode.commands.registerCommand("clickit.publish", () => {
       const git = currentGit();
       if (!git) return askToOpenFolder();
       return publishFlow(git);
@@ -90,21 +90,21 @@ export function activate(context: vscode.ExtensionContext) {
   const opened = currentGit();
   if (pending && opened && path.resolve(pending) === path.resolve(opened.folder)) {
     void context.globalState.update(OPEN_AFTER_CLONE, undefined);
-    EasyGitPanel.open(context, opened);
+    ClickitPanel.open(context, opened);
   }
 
   // 명령 팔레트 / 버튼에서 큰 창 열기
   context.subscriptions.push(
-    vscode.commands.registerCommand("easygit.open", () => {
+    vscode.commands.registerCommand("clickit.open", () => {
       const git = currentGit();
       if (!git) return askToOpenFolder();
-      EasyGitPanel.open(context, git);
+      ClickitPanel.open(context, git);
     })
   );
 
   // 새 브랜치 만들기 — 큰 창의 버튼과 main 경고 알림이 같이 쓴다
   context.subscriptions.push(
-    vscode.commands.registerCommand("easygit.newBranch", (from?: string) => {
+    vscode.commands.registerCommand("clickit.newBranch", (from?: string) => {
       const git = currentGit();
       if (!git) return askToOpenFolder();
       return newBranchFlow(git, from);
@@ -113,13 +113,13 @@ export function activate(context: vscode.ExtensionContext) {
 
   // 왼쪽 사이드바: "열기" 버튼 하나만 있는 작은 화면
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider("easygit.launcher", launcher)
+    vscode.window.registerWebviewViewProvider("clickit.launcher", launcher)
   );
 
   // 파일 저장하면 패널 갱신 + main 브랜치 경고 (3단계에서 UI 붙일 자리, 지금은 동작만)
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument(async () => {
-      EasyGitPanel.current?.scheduleRefresh();
+      ClickitPanel.current?.scheduleRefresh();
       const git = currentGit();
       if (git) await maybeWarnMainBranch(git);
     })
@@ -130,7 +130,7 @@ const warnedThisSession = new Set<string>();
 let lastBranch: string | undefined;
 
 async function maybeWarnMainBranch(git: GitService) {
-  const enabled = vscode.workspace.getConfiguration("easygit").get<boolean>("warnOnMainBranch", true);
+  const enabled = vscode.workspace.getConfiguration("clickit").get<boolean>("warnOnMainBranch", true);
   if (!enabled) return;
   const b = await git.currentBranch();
   if (!b) return;
@@ -143,7 +143,7 @@ async function maybeWarnMainBranch(git: GitService) {
   warnedThisSession.add(b);
 
   const NEW = t("새 브랜치 만들기", "Create a branch");
-  const OPEN = t("EasyGit 열기", "Open EasyGit");
+  const OPEN = t("Clickit 열기", "Open Clickit");
   const pick = await vscode.window.showWarningMessage(
     t(`지금 '${b}' 브랜치에서 작업 중이에요. 여기서 하는 게 맞나요?`, `You're working on '${b}'. Is that the right branch?`),
     t("네, 계속할게요", "Yes, continue"),
@@ -151,7 +151,7 @@ async function maybeWarnMainBranch(git: GitService) {
     OPEN
   );
   if (pick === NEW) await newBranchFlow(git);
-  else if (pick === OPEN) vscode.commands.executeCommand("easygit.open");
+  else if (pick === OPEN) vscode.commands.executeCommand("clickit.open");
 }
 
 /** GitHub 저장소 주소 → 저장할 곳 → 복사 → 열기 */
@@ -245,7 +245,7 @@ async function publishFlow(git: GitService): Promise<void> {
     [
       {
         label: t("$(add) 새 저장소 만들기", "$(add) Create a new repository"),
-        description: t("EasyGit이 GitHub에 저장소를 만들어서 올려요", "EasyGit creates it on GitHub for you"),
+        description: t("Clickit이 GitHub에 저장소를 만들어서 올려요", "Clickit creates it on GitHub for you"),
         connect: false,
       },
       {
@@ -323,7 +323,7 @@ async function publishFlow(git: GitService): Promise<void> {
           return created;
         }
       );
-      EasyGitPanel.current?.scheduleRefresh();
+      ClickitPanel.current?.scheduleRefresh();
       const VIEW = t("GitHub에서 보기", "View on GitHub");
       const pick = await vscode.window.showInformationMessage(
         t("올렸어요! 이제 이 저장소는 GitHub과 연결됐어요. 다음부터는 푸시만 누르면 돼요. 윗줄 GitHub 옆 ↗ 로 언제든 저장소를 열 수 있어요.", "Published! This repository is now connected to GitHub. From now on, just press Push. Use ↗ next to GitHub at the top to open the repository anytime."),
@@ -338,7 +338,7 @@ async function publishFlow(git: GitService): Promise<void> {
       }
       const raw = e instanceof FriendlyError ? e.raw : e?.message ?? String(e);
       const message = e instanceof FriendlyError ? e.message : translateGitError(raw);
-      EasyGitPanel.current?.scheduleRefresh();
+      ClickitPanel.current?.scheduleRefresh();
       await showErrorWithRaw(message, raw);
       return;
     }
@@ -389,11 +389,11 @@ async function connectFlow(git: GitService): Promise<void> {
         detail: t(
           "GitHub에서 만들 때 README 같은 파일을 넣으면, GitHub 쪽 기록과 내 컴퓨터 기록이 따로 시작돼서 푸시가 막혀요.\n\n" +
             "· GitHub에서 아무 파일도 넣지 않은 빈 저장소를 다시 만들어 연결하거나\n" +
-            "· [새 저장소 만들기]로 EasyGit이 빈 저장소를 만들게 해 주세요.\n\n" +
+            "· [새 저장소 만들기]로 Clickit이 빈 저장소를 만들게 해 주세요.\n\n" +
             "이 저장소로 작업하고 싶다면 [GitHub 저장소 가져오기]로 받아서 시작하면 돼요.",
           "If you added files like a README when creating it on GitHub, its history and yours start separately and push gets blocked.\n\n" +
             "· Create an empty repository on GitHub (no files) and connect that, or\n" +
-            "· Let EasyGit create an empty one with [Create a new repository].\n\n" +
+            "· Let Clickit create an empty one with [Create a new repository].\n\n" +
             "To work on this repository itself, start from [Clone from GitHub]."
         ),
       },
@@ -421,12 +421,12 @@ async function connectFlow(git: GitService): Promise<void> {
     );
   } catch (e: any) {
     // 연결까지는 됐을 수 있다. 그러면 윗줄에 푸시 버튼이 생기니 다시 누르면 된다
-    EasyGitPanel.current?.scheduleRefresh();
+    ClickitPanel.current?.scheduleRefresh();
     const raw = e?.message ?? String(e);
     await showErrorWithRaw(translateGitError(raw), raw);
     return;
   }
-  EasyGitPanel.current?.scheduleRefresh();
+  ClickitPanel.current?.scheduleRefresh();
   const VIEW = t("GitHub에서 보기", "View on GitHub");
   const pick = await vscode.window.showInformationMessage(
     t("연결했어요! 다음부터는 푸시만 누르면 돼요. 윗줄 GitHub 옆 ↗ 로 언제든 저장소를 열 수 있어요.", "Connected! From now on, just press Push. Use ↗ next to GitHub at the top to open the repository anytime."),
@@ -460,7 +460,7 @@ async function newBranchFlow(git: GitService, from?: string) {
 
   try {
     await git.createBranch(name.trim(), from);
-    EasyGitPanel.current?.scheduleRefresh();
+    ClickitPanel.current?.scheduleRefresh();
   } catch (e: any) {
     vscode.window.showErrorMessage(translateGitError(e?.message ?? String(e)));
   }
@@ -487,7 +487,7 @@ class LauncherView implements vscode.WebviewViewProvider {
     view.webview.options = { enableScripts: true };
     this.render();
     view.webview.onDidReceiveMessage((m) => {
-      if (m.type === "open") vscode.commands.executeCommand("easygit.open");
+      if (m.type === "open") vscode.commands.executeCommand("clickit.open");
     });
   }
 
@@ -505,7 +505,7 @@ class LauncherView implements vscode.WebviewViewProvider {
   button:hover { background: var(--vscode-button-hoverBackground); }
 </style></head><body>
 <p>${t("커밋, 푸시, 브랜치를 한 화면에서 버튼으로.", "Commit, push and branch — all with buttons, on one screen.")}</p>
-<button id="open">${t("EasyGit 열기", "Open EasyGit")}</button>
+<button id="open">${t("Clickit 열기", "Open Clickit")}</button>
 <script nonce="${nonce}">
   const vscode = acquireVsCodeApi();
   document.getElementById('open').onclick = () => vscode.postMessage({ type: 'open' });

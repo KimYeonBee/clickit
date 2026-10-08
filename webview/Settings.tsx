@@ -81,7 +81,7 @@ export function Settings({
 
   return (
     <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal" role="dialog" aria-label={t("EasyGit 설정", "EasyGit settings")}>
+      <div className="modal" role="dialog" aria-label={t("Clickit 설정", "Clickit settings")}>
         <header className="modal-head">
           <h1>{t("설정", "Settings")}</h1>
           <button className="icon-btn" onClick={onClose} aria-label={t("닫기", "Close")} title={t("닫기 (Esc)", "Close (Esc)")}>
@@ -312,9 +312,9 @@ export function Settings({
         {data.sponsorUrl && (
           <section className="set sponsor">
             <div className="set-label">
-              {t("EasyGit이 도움이 됐나요?", "Is EasyGit helping you?")}
+              {t("Clickit이 도움이 됐나요?", "Is Clickit helping you?")}
               <span className="dim">
-                {t("EasyGit은 무료예요. 후원은 계속 만드는 데 큰 힘이 돼요.", "EasyGit is free. Sponsoring helps keep it going.")}
+                {t("Clickit은 무료예요. 후원은 계속 만드는 데 큰 힘이 돼요.", "Clickit is free. Sponsoring helps keep it going.")}
               </span>
             </div>
             <button className="ghost sponsor-btn" onClick={() => send({ type: "openSponsor" })}>

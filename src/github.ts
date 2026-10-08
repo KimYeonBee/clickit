@@ -95,7 +95,7 @@ export async function createGitHubRepo(
         Authorization: `Bearer ${auth.token}`,
         Accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
-        "User-Agent": "EasyGit",
+        "User-Agent": "Clickit",
       },
       body: JSON.stringify({ name, private: isPrivate }),
     });
