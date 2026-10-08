@@ -2,7 +2,7 @@
   "name": "clickit",
   "displayName": "Clickit — Git for Beginners",
   "description": "%description%",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "yeonbee",
   "license": "MIT",
   "icon": "media/icon.png",
