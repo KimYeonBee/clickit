@@ -5,6 +5,7 @@
   "version": "0.0.2",
   "publisher": "yeonbee",
   "license": "MIT",
+  "icon": "media/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/KimYeonBee/clickit.git"
@@ -121,6 +122,7 @@
     }
   },
   "scripts": {
+    "vscode:prepublish": "npm run build",
     "build": "node esbuild.mjs",
     "watch": "node esbuild.mjs --watch",
     "package": "npm run build && vsce package"

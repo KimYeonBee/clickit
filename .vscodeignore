@@ -8,3 +8,4 @@ CLAUDE.md
 .vscode/**
 *.vsix
 .gitignore
+media/icon-marketplace.svg
