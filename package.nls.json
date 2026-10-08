@@ -1,0 +1,14 @@
+{
+  "description": "An all-in-one git screen for beginners. Commit, push and branch with buttons.",
+  "command.open": "Open EasyGit",
+  "command.newBranch": "Create a Branch",
+  "command.clone": "Clone from GitHub",
+  "command.publish": "Publish to GitHub (Create Repository)",
+  "config.warnOnMainBranch": "Ask whether you meant to work on main/master when you save a file there.",
+  "config.skin": "EasyGit screen skin.",
+  "config.skin.vscode": "Follows your VS Code theme",
+  "config.skin.pixel": "Retro pixel RPG style",
+  "config.commitPrefixes": "Prefixes you can add to commit messages from the dropdown next to the commit box. Leave empty to hide the dropdown.",
+  "config.language.auto": "Follow VS Code's display language",
+  "config.language": "Language for EasyGit screens and messages."
+}

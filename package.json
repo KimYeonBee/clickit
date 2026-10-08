@@ -1,0 +1,133 @@
+{
+  "name": "easygit",
+  "displayName": "EasyGit",
+  "description": "%description%",
+  "version": "0.0.1",
+  "publisher": "yeonbi",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:.git"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "easygit.open",
+        "title": "%command.open%",
+        "category": "EasyGit"
+      },
+      {
+        "command": "easygit.newBranch",
+        "title": "%command.newBranch%",
+        "category": "EasyGit"
+      },
+      {
+        "command": "easygit.clone",
+        "title": "%command.clone%",
+        "category": "EasyGit"
+      },
+      {
+        "command": "easygit.publish",
+        "title": "%command.publish%",
+        "category": "EasyGit"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "easygit",
+          "title": "EasyGit",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "easygit": [
+        {
+          "id": "easygit.launcher",
+          "name": "EasyGit",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "EasyGit",
+      "properties": {
+        "easygit.warnOnMainBranch": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.warnOnMainBranch%"
+        },
+        "easygit.skin": {
+          "type": "string",
+          "enum": [
+            "vscode",
+            "pixel"
+          ],
+          "enumDescriptions": [
+            "%config.skin.vscode%",
+            "%config.skin.pixel%"
+          ],
+          "default": "vscode",
+          "description": "%config.skin%"
+        },
+        "easygit.language": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "ko",
+            "en"
+          ],
+          "enumDescriptions": [
+            "%config.language.auto%",
+            "한국어",
+            "English"
+          ],
+          "default": "auto",
+          "description": "%config.language%"
+        },
+        "easygit.commitPrefixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "feat: ",
+            "fix: ",
+            "docs: ",
+            "style: ",
+            "refactor: ",
+            "test: ",
+            "chore: "
+          ],
+          "description": "%config.commitPrefixes%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "package": "npm run build && vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "simple-git": "^3.22.0"
+  }
+}
